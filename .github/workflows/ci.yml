@@ -1,0 +1,21 @@
+name: Rust CI
+
+# main 브랜치에 코드가 push 되거나 PR이 올라올 때마다 실행
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 내 코드 복사해오기 (Checkout)
+      uses: actions/checkout@v3
+      
+    - name: Rust 툴체인 세팅
+      uses: dtolnay/rust-toolchain@stable
+      
+    - name: 테스트 실행
+      run: cargo test --verbose

@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: 내 코드 복사해오기 (Checkout)
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       
     - name: Rust 툴체인 세팅
       uses: dtolnay/rust-toolchain@stable
@@ -29,7 +29,7 @@ jobs:
       run: cargo tarpaulin --verbose --out html --out xml
       
     - name: 커버리지 HTML 리포트를 GitHub에 저장 (Artifact)
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: tarpaulin-report.html

@@ -1,6 +1,5 @@
 name: Rust CI
 
-# main 브랜치에 코드가 push 되거나 PR이 올라올 때마다 실행
 on:
   push:
     branches: [ "main" ]
@@ -8,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test:
+  test_and_coverage:
     runs-on: ubuntu-latest
     steps:
     - name: 내 코드 복사해오기 (Checkout)
@@ -17,5 +16,20 @@ jobs:
     - name: Rust 툴체인 세팅
       uses: dtolnay/rust-toolchain@stable
       
-    - name: 테스트 실행
+    - name: 기본 단위 테스트 실행
       run: cargo test --verbose
+
+    # -- 여기서부터 Tarpaulin 커버리지 측정 추가 --
+    - name: Tarpaulin 초고속 설치 (바이너리 다운로드)
+      uses: taiki-e/install-action@cargo-tarpaulin
+      
+    - name: 코드 커버리지 측정 및 결과 생성
+      # --out html: 사람이 보기 편한 웹페이지 리포트 생성
+      # --out xml: 나중에 외부 서비스(Codecov 등)와 연동할 때 쓸 데이터 생성
+      run: cargo tarpaulin --verbose --out html --out xml
+      
+    - name: 커버리지 HTML 리포트를 GitHub에 저장 (Artifact)
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: tarpaulin-report.html
